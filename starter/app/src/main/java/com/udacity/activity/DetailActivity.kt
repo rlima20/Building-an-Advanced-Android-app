@@ -1,8 +1,9 @@
-package com.udacity
+package com.udacity.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_detail.*
+import com.udacity.R
+import kotlinx.android.synthetic.main.activity_detail.toolbar
 
 class DetailActivity : AppCompatActivity() {
 
@@ -11,5 +12,4 @@ class DetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
         setSupportActionBar(toolbar)
     }
-
 }
