@@ -16,7 +16,7 @@ class LoadingButton @JvmOverloads constructor(
     private var heightSize = 0
     private val valueAnimator = ValueAnimator()
 
-    private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
+    private var buttonState: ButtonState by Delegates.observable(ButtonState.Completed) { p, old, new ->
     }
 
     init {
@@ -24,6 +24,16 @@ class LoadingButton @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
+    }
+
+    override fun performClick(): Boolean {
+        if (super.performClick()) return true
+
+        // background = ResourcesCompat.getColor(resources, R.buttonColorLeft .colorPrimaryDark,
+        // null)
+
+        invalidate()
+        return true
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
