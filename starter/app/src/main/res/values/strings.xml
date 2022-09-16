@@ -1,18 +1,25 @@
 <resources>
-    <string name="app_name">ND940C3-Project</string>
-    <string name="app_description">Download files from Internet</string>
-    <string name="action_settings">Settings</string>
+    <!-- Strings regarding the app-->
+    <string name="string_app_name">ND940C3-Project</string>
+    <string name="string_app_description">Download files from Internet</string>
 
+    <!-- Strings related to RadioButtons -->
+    <string name="string_glide_download">Glide - Image loading Library by BumpTech</string>
+    <string name="string_loadapp_download">LoadApp - Current repository by Udacity</string>
+    <string name="string_retrofit_download">Retrofit - Type-safe HTTP client for Android and Java by Square, Inc</string>
 
-    <string name="notification_title">Udacity: Android Kotlin Nanodegree </string>
-    <string name="notification_description">The Project 3 repository is downloaded</string>
-    <string name="notification_button">See changes</string>
+    <!-- Strings regarding details screen -->
+    <string name="string_details_status">Status:</string>
+    <string name="string_details_file_name">File Name:</string>
+    <string name="string_ok_button">OK</string>
 
-    <string name="button_name">Click me</string>
+    <!-- Other strings -->
+    <string name="string_status_failed">Fail</string>
+    <string name="string_toast_message">Please, select a valid option</string>
     <string name="button_loading">We are loading </string>
     <string name="title_activity_detail">DetailActivity</string>
-
-    <string name="radio_button_glide">Glide - Image Loading Library by BumpTech</string>
-    <string name="radio_button_udacity">Load App - Current repository by Udacity</string>
-    <string name="radio_button_retrofit">Retrofit - Type-safe HTTP client for Android and Java by Square, Inc</string>
+    <string name="string_notification_title">Udacity: Android Kotlin Nanodegree </string>
+    <string name="string_notification_description">The Project 3 repository is downloaded</string>
+    <string name="string_notification_button">See changes</string>
+    <string name="string_action_settings">Settings</string>
 </resources>

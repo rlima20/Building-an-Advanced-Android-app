@@ -35,8 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:onClick="onRadioButtonClicked"
-            android:text="@string/radio_button_glide"
+            android:text="@string/string_glide_download"
             android:textSize="20sp" />
 
         <RadioButton
@@ -44,8 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:onClick="onRadioButtonClicked"
-            android:text="@string/radio_button_udacity"
+            android:text="@string/string_loadapp_download"
             android:textSize="20sp" />
 
         <RadioButton
@@ -54,8 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:onClick="onRadioButtonClicked"
-            android:text="@string/radio_button_retrofit"
+            android:text="@string/string_retrofit_download"
             android:textSize="20sp" />
     </RadioGroup>
 
@@ -64,11 +61,13 @@
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_margin="20dp"
-        android:background="@color/colorPrimary"
-        app:buttonColorLeft="@color/colorPrimary"
-        app:buttonColorRight="@color/colorPrimaryDark"
+        app:archColor="@color/colorAccent"
+        app:backgroundDefaultColor="@color/colorPrimary"
+        app:backgroundLoadingColor="@color/colorPrimaryDark"
+        app:defaultButtonText="Download"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:loadingButtonText="@string/button_loading" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

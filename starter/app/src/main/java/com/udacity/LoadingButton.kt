@@ -1,10 +1,16 @@
 package com.udacity
 
 import android.animation.ValueAnimator
+import android.animation.ValueAnimator.INFINITE
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.LinearInterpolator
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.content.withStyledAttributes
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(
@@ -12,28 +18,167 @@ class LoadingButton @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
+
     private var widthSize = 0
     private var heightSize = 0
-    private val valueAnimator = ValueAnimator()
+    private var textHalfWidthSize = 0f
+    private val downloadTextSize = 55.0f
 
-    private var buttonState: ButtonState by Delegates.observable(ButtonState.Completed) { p, old, new ->
+    private var defaultColor = 0
+    private var loadingColor = 0
+    private var archColor = 0
+    private var defaultText = ""
+    private var loadingText = ""
+
+    private var loadingAccelerateFactor = 1
+    private var downloadProgress = 0f
+    private val downloadValueAnimator = ValueAnimator.ofInt(0, 100)
+    private var archProgress = 0f
+    private val archValueAnimator = ValueAnimator.ofInt(0, 360)
+    private var finishAnimations = false
+
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        textAlign = Paint.Align.CENTER
+        textSize = downloadTextSize
+        typeface = Typeface.create("", Typeface.NORMAL)
+    }
+
+    private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
+        when (new) {
+            ButtonState.Loading -> startAnimations()
+            ButtonState.Completed -> {
+                loadingAccelerateFactor = 1
+                cancelAnimations()
+                invalidate()
+            }
+        }
     }
 
     init {
+        setLoadingButtonDefaultValues(context, attrs)
+        setDownloadAnimatorValues()
+        setArchAnimatorValues()
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    private fun setLoadingButtonDefaultValues(
+        context: Context,
+        attrs: AttributeSet?
+    ) {
+        context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
+            defaultColor = getColor(R.styleable.LoadingButton_backgroundDefaultColor, 0)
+            loadingColor = getColor(R.styleable.LoadingButton_backgroundLoadingColor, 0)
+            archColor = getColor(R.styleable.LoadingButton_archColor, 0)
+            defaultText = getString(R.styleable.LoadingButton_defaultButtonText) ?: ""
+            loadingText = getString(R.styleable.LoadingButton_loadingButtonText) ?: ""
+        }
+    }
+
+    private fun setDownloadAnimatorValues() {
+        downloadValueAnimator.apply {
+            duration = 4000
+            interpolator = LinearInterpolator()
+            repeatCount = INFINITE
+            addUpdateListener { valueAnimator ->
+                downloadProgress =
+                    (valueAnimator.animatedValue as Int).toFloat() * loadingAccelerateFactor
+                invalidate()
+
+                if (downloadProgress >= 100 && finishAnimations) {
+                    setState(ButtonState.Completed)
+                }
+            }
+        }
+    }
+
+    private fun setArchAnimatorValues() {
+        archValueAnimator.apply {
+            duration = 4000
+            interpolator = LinearInterpolator()
+            repeatCount = INFINITE
+            addUpdateListener { valueAnimator ->
+                archProgress =
+                    (valueAnimator.animatedValue as Int).toFloat() * loadingAccelerateFactor
+                invalidate()
+            }
+        }
+    }
+
+    private fun startAnimations() {
+        downloadValueAnimator.start()
+        archValueAnimator.start()
+    }
+
+    private fun cancelAnimations() {
+        downloadValueAnimator.cancel()
+        archValueAnimator.cancel()
+    }
+
+    fun setState(state: ButtonState) {
+        buttonState = state
+    }
+
+    fun complete() {
+        loadingAccelerateFactor = 4
+        finishAnimations = true
+    }
+
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        drawBackground(canvas)
+        drawText(canvas)
+        drawArch(canvas)
+    }
+
+    private fun drawBackground(canvas: Canvas) {
+        canvas.drawColor(defaultColor)
+        if (buttonState == ButtonState.Loading) {
+            paint.color = loadingColor
+            canvas.drawRect(0f, 0f, (width * (downloadProgress / 100)), height.toFloat(), paint)
+        }
+    }
+
+    private fun drawText(canvas: Canvas) {
+        val label = if (buttonState == ButtonState.Loading) {
+            loadingText
+        } else {
+            defaultText
+        }
+
+        paint.color = ResourcesCompat.getColor(resources, R.color.white, null)
+
+        canvas.drawText(
+            label,
+            (widthSize / 2).toFloat(),
+            (heightSize / 2) + (downloadTextSize / 3),
+            paint
+        )
+
+        textHalfWidthSize = paint.measureText(label) / 2
+    }
+
+    private fun drawArch(canvas: Canvas) {
+        if (buttonState == ButtonState.Loading) {
+            paint.color = archColor
+            canvas.drawArc(
+                ((widthSize / 2) + textHalfWidthSize + 30f),
+                (heightSize / 2) - (downloadTextSize / 2),
+                ((widthSize / 2) + textHalfWidthSize + 80f),
+                (heightSize / 2) + (downloadTextSize / 2),
+                0f,
+                archProgress,
+                true,
+                paint
+            )
+        }
     }
 
     override fun performClick(): Boolean {
-        if (super.performClick()) return true
+        if (buttonState != ButtonState.Completed) {
+            return false
+        }
 
-        // background = ResourcesCompat.getColor(resources, R.buttonColorLeft .colorPrimaryDark,
-        // null)
-
-        invalidate()
-        return true
+        return super.performClick()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

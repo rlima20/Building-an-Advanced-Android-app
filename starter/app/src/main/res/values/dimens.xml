@@ -1,5 +1,10 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
-
-    <dimen name="default_text_size">20sp</dimen>
+    <!-- Dimens related to Details Screen -->
+    <dimen name="details_screen_margin_start">16dp</dimen>
+    <dimen name="details_screen_margin_top">30dp</dimen>
+    <dimen name="details_labels_text_size">18sp</dimen>
+    <dimen name="details_screen_default_text_size">20sp</dimen>
+    <dimen name="details_screen_button_height">60dp</dimen>
+    <dimen name="details_screen_button_margin">20dp</dimen>
+    <dimen name="details_screen_button_text_size">20sp</dimen>
 </resources>
